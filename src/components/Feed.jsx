@@ -1,37 +1,41 @@
-import React, { useEffect } from 'react'
-import { BASE_URL } from '../utils/constants'
+import React, { useEffect } from 'react';
+import { BASE_URL } from '../utils/constants';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { addFeed } from '../utils/feedSlice';
+import Card from './Card';
 
 const Feed = () => {
-  const navigate = useNavigate();
+  const feed = useSelector((store) => store.feed);  // Get feed data from Redux store
   const dispatch = useDispatch();
-  const userData = useSelector((store) => store.user);
-  if(userData) return;
-  async function userDataCall() {
 
+  const getFeed = async () => {
     try {
-      const res = await axios.post(BASE_URL+"/profile",{},{
-        withCredentials:true,
+      if (feed && feed.length > 0) return;  // Avoid fetching if feed already exists
+      const feedRes = await axios.get(BASE_URL + "/feed", {
+        withCredentials: true,
       });
-      dispatch(addUser(res.data));
+      console.log(feedRes.data);  // Logging the fetched data
+      dispatch(addFeed(feedRes.data));  // Dispatch the data to the Redux store
+    } catch (err) {
+      console.error('Error fetching feed:', err);  // Error handling
     }
-    catch(err) {
-      if(err.status === 401) {
-       navigate('/login');
-      }
-      console.error(err);
-    }
-  }
-  useEffect(() => {
-    userDataCall();
-  },[])
-  return (
-    <div>
-      feed
-    </div>
-  )
-}
+  };
 
-export default Feed
+  useEffect(() => {
+    getFeed();  // Fetch feed when component mounts
+  }, [dispatch, feed]);  // Run getFeed on component mount or feed state change
+
+  if (!feed || feed.length === 0) {
+    return <div>Loading...</div>;  // Display loading state if no feed
+  }
+
+  return (
+    <div className="flex justify-center my-10">
+      {/* Render Card component with the first item from the feed */}
+      <Card user={feed[0]} />
+    </div>
+  );
+};
+
+export default Feed;
