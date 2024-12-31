@@ -73,9 +73,9 @@ const EditProfile = ({ user }) => {
                             </label>
 
                             <label className="form-control w-full max-w-xs my-1">
-                                <input type="text" value={description}
-                                    className="input input-bordered w-full max-w-xs"
-                                    onChange={(e) => setDescription(e.target.value)} />
+                            <textarea className="textarea" placeholder="Bio" 
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}></textarea>
                             </label>
 
                             <label className="form-control w-full max-w-xs my-1">
