@@ -19,12 +19,12 @@ const Requests = () => {
            console.error(e.message);
         }
     }
-    const handleRequests = async(reqStatus,id) => {
+    const handleRequests = async(reqStatus,id,reqId) => {
         try{
-            const handleResponse = await axios.post(BASE_URL+"/request/review/"+reqStatus+"/"+id,{},{
+            await axios.post(BASE_URL+"/request/review/"+reqStatus+"/"+id,{},{
                 withCredentials: true
             });
-            dispatch(removeRequest(id))
+            dispatch(removeRequest(reqId))
         } catch(e) {
            console.error(e.message);
         }
@@ -53,8 +53,8 @@ const Requests = () => {
                         <p>{description}</p>
                     </div>
                     <div>
-                        <button className="btn btn-primary mx-10" onClick = {()=> handleRequests('accepted',_id)}>Accept</button>
-                    <button className="btn btn-secondary">Reject</button>
+                        <button className="btn btn-primary mx-10" onClick = {()=> handleRequests('accepted',_id,request._id)}>Accept</button>
+                    <button className="btn btn-secondary" onClick = {()=> handleRequests('rejected',_id, request._id)}>Reject</button>
                     </div>
                 </div>
             )
