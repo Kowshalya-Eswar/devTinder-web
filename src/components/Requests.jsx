@@ -2,7 +2,8 @@ import React, { useEffect } from 'react'
 import axios from 'axios'
 import { BASE_URL } from '../utils/constants'
 import { useDispatch, useSelector } from 'react-redux'
-import { addRequests } from '../utils/RequestSlice'
+import { addRequests, removeRequest } from '../utils/RequestSlice'
+import { use } from 'react'
 
 const Requests = () => {
     const requests = useSelector((store)=>store.requests);
@@ -14,6 +15,16 @@ const Requests = () => {
             });
             console.log(requests)
             dispatch(addRequests(requests_response.data.data))
+        } catch(e) {
+           console.error(e.message);
+        }
+    }
+    const handleRequests = async(reqStatus,id) => {
+        try{
+            const handleResponse = await axios.post(BASE_URL+"/request/review/"+reqStatus+"/"+id,{},{
+                withCredentials: true
+            });
+            dispatch(removeRequest(id))
         } catch(e) {
            console.error(e.message);
         }
@@ -42,8 +53,8 @@ const Requests = () => {
                         <p>{description}</p>
                     </div>
                     <div>
-                        <button className="btn btn-primary">Ignore</button>
-                    <button className="btn btn-secondary">Interest</button>
+                        <button className="btn btn-primary mx-10" onClick = {()=> handleRequests('accepted',_id)}>Accept</button>
+                    <button className="btn btn-secondary">Reject</button>
                     </div>
                 </div>
             )
