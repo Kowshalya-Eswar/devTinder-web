@@ -26,7 +26,7 @@ const Feed = () => {
 
   useEffect(() => {
     getFeed();  // Fetch feed when component mounts
-  }, [dispatch, feed]);  // Run getFeed on component mount or feed state change
+  }, []);  // Run getFeed on component mount or feed state change
 
   if (!feed || feed.length === 0) {
     return <div>Loading...</div>;  // Display loading state if no feed
