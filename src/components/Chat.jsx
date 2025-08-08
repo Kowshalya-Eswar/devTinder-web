@@ -22,7 +22,6 @@ const Chat = () => {
     if (message.trim() !== '') {     
       socket.emit("sendMessage",{
         firstName: user.firstName,
-        userId,
         id,
         text:message
       })
@@ -30,13 +29,12 @@ const Chat = () => {
     setMessage('');
   };
 
-  // Set up socket connection when component mounts (example)
   useEffect(() => {
     if(!userId) {
       return;
     }
-    const socket = createSocketConnection(); // Assuming you have a socket connection function
-    socket.emit("joinChat", { firstName: user.firstName, userId, id });
+    const socket = createSocketConnection();
+    socket.emit("joinChat", { firstName: user.firstName, id });
     socket.on("messageReceived",({firstName,text})=> {
       setMessages((messages)=>[...messages, {firstName,text}])
     })

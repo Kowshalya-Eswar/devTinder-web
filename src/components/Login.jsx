@@ -24,6 +24,7 @@ const Login = () => {
                 password
             },{withCredentials:true})
             dispatch(addUser(res.data));
+            localStorage.setItem("user", JSON.stringify(res.data));
             return navigate("/");
         }catch(e) {
             console.log(e);
